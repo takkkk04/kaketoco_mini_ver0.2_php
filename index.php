@@ -10,6 +10,7 @@
 <body>
     <header class="app_header">
         <h1>カケトコ_mini</h1>
+        <a href="./admin/admin.php" class="admin_link">管理画面へ</a>
     </header>
 
     <main class="app_main">
