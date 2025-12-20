@@ -62,20 +62,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     //__DIR__はこのファイルの置いてあるフォルダの場所→の中の、dataフォルダの中のdata.json
     $filePath = __DIR__ . '/../data/data.json';
-//     $dir = realpath(__DIR__ . "/..");          // admin の1つ上（プロジェクト直下）
-// echo "project dir: " . $dir . "<br>";
-
-// $dataDir  = $dir . "/data";
-// $filePath = $dataDir . "/data.json";
-
-// echo "data dir: " . $dataDir . "<br>";
-// echo "filePath: " . $filePath . "<br>";
-
-// echo "dataフォルダある？ " . (is_dir($dataDir) ? "YES" : "NO") . "<br>";
-// echo "data.jsonある？ " . (file_exists($filePath) ? "YES" : "NO") . "<br>";
-// echo "dataフォルダ書ける？ " . (is_writable($dataDir) ? "YES" : "NO") . "<br>";
-// echo "data.json書ける？ " . (is_writable($filePath) ? "YES" : "NO") . "<br>";
-// exit;
 
     append_json_record($filePath, $data);
     //header()はHTTPヘッダーを送信する関数、Location: このURLに行け、saved=1はただの名前
@@ -99,6 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
     <h1>カケトコmini 農薬マスタ管理</h1>
 
+    <!-- 保存押した時表示されるメッセージ -->
     <?php if (isset($_GET["saved"])): ?>
         <p >保存しました</p>
     <?php endif; ?>
