@@ -1,0 +1,18 @@
+[
+    {
+        "number": 9999,
+        "name": "テスト",
+        "category": "殺虫剤",
+        "crop": [
+            "テスト"
+        ],
+        "target": [
+            "テスト"
+        ],
+        "interval": 9999,
+        "magnification": 9999,
+        "times": 9999,
+        "score": 9999,
+        "shopify_id": "9999"
+    }
+]

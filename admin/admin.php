@@ -15,13 +15,39 @@ function parse_list($str) {
     return array_values(array_filter($parts, fn($v) => $v !== ""));
 }
 
+// =============================================
+//JSONファイルにデータを追加する関数
+// =============================================
+function append_json_record($filePath, $record) {
+    //$listは配列ですよ
+    $list  = [];
+    //ファイルが存在すれば中身を読み込む
+    if (file_exists($filePath)) {
+        $json = file_get_contents($filePath);
+        //json_decode()=JSON文字列を配列に変換する、trueをつけると連想配列になる
+        $decoded = json_decode($json, true);
+        //is_array()は配列かどうか調べる関数、配列ならtrue
+        if (is_array($decoded)) {
+            //配列なら代入
+            $list = $decoded;
+        }
+    }
+    $list[] = $record;
+
+    //json_encode()=配列をJSON文字列に変換する
+    //JSONほにゃらら〜は日本語を文字化け（エスケープ）させない、改行して見やすくする
+    $out = json_encode($list, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    //file_put_contents(A, B)はAにBを書き込む、LOCK_EXは排他ロック
+    file_put_contents($filePath, $out, LOCK_EX);
+}
+
 //このページがPOST送信のとき（HTMLでmethod="POST"なら）
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $data = [
         //HTMLのinput name="number"を見ている、=>は連想配列（JSのオブジェクト）
         //三項演算子… 条件 ? A : B (条件がtrueならA、falseならB)
         //null合体演算子… A ?? B (Aが存在すればA、なければB)
-        //→""じゃなければ → (int)は整数に変換
+        //!==""… ""じゃなければ → (int)は整数に変換
         "number" => ($_POST["number"] ?? "") !== "" ? (int)$_POST["number"] : null,
         "name" => trim($_POST["name"] ?? ""),
         "category" => $_POST["category"] ?? "",
@@ -34,9 +60,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "shopify_id" => trim($_POST["shopify_id"] ?? "") ?: null,
     ];
 
-    echo "<pre>";
-    var_dump($data);
-    echo "</pre>";
+    //__DIR__はこのファイルの置いてあるフォルダの場所→の中の、dataフォルダの中のdata.json
+    $filePath = __DIR__ . '/../data/data.json';
+//     $dir = realpath(__DIR__ . "/..");          // admin の1つ上（プロジェクト直下）
+// echo "project dir: " . $dir . "<br>";
+
+// $dataDir  = $dir . "/data";
+// $filePath = $dataDir . "/data.json";
+
+// echo "data dir: " . $dataDir . "<br>";
+// echo "filePath: " . $filePath . "<br>";
+
+// echo "dataフォルダある？ " . (is_dir($dataDir) ? "YES" : "NO") . "<br>";
+// echo "data.jsonある？ " . (file_exists($filePath) ? "YES" : "NO") . "<br>";
+// echo "dataフォルダ書ける？ " . (is_writable($dataDir) ? "YES" : "NO") . "<br>";
+// echo "data.json書ける？ " . (is_writable($filePath) ? "YES" : "NO") . "<br>";
+// exit;
+
+    append_json_record($filePath, $data);
+    //header()はHTTPヘッダーを送信する関数、Location: このURLに行け、saved=1はただの名前
+    header("Location: admin.php?saved=1");
     exit;
 }
 
@@ -55,6 +98,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body>
     <h1>カケトコmini 農薬マスタ管理</h1>
+
+    <?php if (isset($_GET["saved"])): ?>
+        <p >保存しました</p>
+    <?php endif; ?>
+
     <form id="pesticide_form" method="POST">
         <div>
             <label for="number">number(登録番号)</label>
@@ -106,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <div>
             <label for="score">score(カケトコスコア)</label>
-            <input type="number" id="score" name="score" min="0" max="100">
+            <input type="number" id="score" name="score" min="0">
         </div>
 
         <div>
