@@ -1,18 +1,28 @@
 <?php
 // =============================================
-//カンマ区切りの文字列を配列で返す関数
+// 作物・病害虫欄入力を成形して配列で返す関数
 // =============================================
 function parse_list($str) {
     //trim()は前後の空白を削除する
     $str = trim((string)$str);
     if ($str === "") return [];
-    //array_map()は配列の各要素にtrimを適用する
-    //explode()は、$strを,で区切って配列にしろ
-    $parts = array_map('trim', explode(',',$str));
+    //区切りを全部半角カンマに統一する関数
+    $str = str_replace(["、",",",";","；","\n","\r","\t"], ",", $str);
+    //連続する空白を1つのカンマに変換する
+    $str = preg_replace('/\s+/', ',', $str);
+    //半角カナを全角カナに変換
+    $str = mb_convert_kana($str, "KVs", "UTF-8");
+    //explode()は、$strを,で区切って配列にする
+    $parts = explode(',',$str);
+    //array_map()は配列の各要素にtrimを適用する   
+    $parts = array_map('trim', $parts);
     //array_filter(A,B)はAの中のBだけ残せ
     //fn($v) => $v !== "" はアロー関数で、$vが空文字じゃないときだけ返せ
+    $parts = array_filter($parts, fn($v) => $v !== "");
+    //array_unique()は配列の中の重複を取り除く
+    $parts = array_unique($parts);
     //array_values()は配列のキーを0から振り直す
-    return array_values(array_filter($parts, fn($v) => $v !== ""));
+    return array_values($parts);
 }
 
 // =============================================
