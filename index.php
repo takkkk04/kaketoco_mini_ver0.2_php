@@ -16,6 +16,41 @@ $crop = trim($_GET["crop"] ?? "");
 $target = trim($_GET["target"] ?? "");
 
 // =============================================
+// 作物、病害虫プルダウン
+// =============================================
+$cropSet = [];
+$targetSet = [];
+
+//foreach(配列 as 変数)は配列の中身を順番に取り出す
+//$listは農薬リスト、$pはその中のひとつの農薬データ
+foreach ($list as $p) {
+    //cropが配列じゃなかったら空配列で返す、$cropsは配列になる
+    $crops = is_array($p["crop"] ?? null) ? $p["crop"] : [];
+    //$cropsは作物リスト、$cはその中のひとつの作物名
+    //$cを文字列に変換して前後の空白を削る
+    //$cが空じゃなければ$cropSetの配列の中に追加する、重複は上書きされるので勝手に消える
+    foreach ($crops as $c) {
+        $c = trim((string)$c);
+        if ($c !== "") $cropSet[$c] = true;
+    }
+
+    //targetでも同じ処理
+    $targets = is_array($p["target"] ?? null) ? $p["target"] : [];
+    foreach ($targets as $t) {
+        $t = trim((string)$t);
+        if ($t !== "") $targetSet[$t] = true;
+    }
+}
+
+//array_keys()は配列のキーだけ取り出す
+$cropOptions = array_keys($cropSet);
+$targetOptions = array_keys($targetSet);
+
+//ざっくり文字順ソート
+sort($cropOptions, SORT_STRING);
+sort($targetOptions, SORT_STRING);
+
+// =============================================
 // 絞り込み、検索結果用の配列 $filtered を作る
 // =============================================
 
@@ -76,7 +111,7 @@ $count = count($filtered);
 </head>
 <body>
     <header class="app_header">
-        <h1>カケトコ_mini</h1>
+        <h1>カケトコ mini</h1>
         <a href="./admin/admin.php" class="admin_link">管理画面へ</a>
     </header>
 
@@ -109,9 +144,19 @@ $count = count($filtered);
                     <label for="crop">作物名</label>
                     <select name="crop" id="crop">
                         <option value="">指定なし</option>
-                        <!-- ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                            あとで作物名プルダウンつくる
-                        ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ -->
+                        <!-- 作物名プルダウン -->
+                        <?php foreach ($cropOptions as $c): ?>
+                            <!-- <select>のプルダウンの中身<option>をHTMLで作っている -->
+                            <!-- htmlspecialchars()は安全装置,記号とかをエスケープする -->
+                            <option value="<?php echo htmlspecialchars($c, ENT_QUOTES, "UTF-8"); ?>"
+                                <?php 
+                                // selectedがあると検索ボタン押しても選択状態になる
+                                echo($crop === $c) ? "selected" : ""; ?>>
+                                <?php 
+                                //<option>トマト</option>のトマトの部分
+                                echo htmlspecialchars($c, ENT_QUOTES, "UTF-8"); ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
@@ -119,9 +164,12 @@ $count = count($filtered);
                     <label for="target">病害虫</label>
                     <select name="target" id="target">
                         <option value="">指定なし</option>
-                        <!-- ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                            あとで病害虫プルダウンつくる
-                        ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ --> 
+                        <?php foreach ($targetOptions as $t): ?>
+                            <option value="<?php echo htmlspecialchars($t, ENT_QUOTES, "UTF-8"); ?>"
+                                <?php echo($target === $t) ? "selected" : ""; ?>>
+                                <?php echo htmlspecialchars($t, ENT_QUOTES, "UTF-8"); ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
@@ -138,12 +186,30 @@ $count = count($filtered);
             <div class="result_header">
                 <h2>検索結果</h2>
                 <div class="result_meta">
-                    <span id="result_count">0件</span>
+                    <span id="result_count"><?php echo (int)$count ?>件</span>
                 </div>
             </div>
 
             <!-- 検索結果表示エリア -->
-            <div id="result_list" class="result_list"></div>
+            <div id="result_list" class="result_list">
+                <?php if ($count === 0): ?>
+                    <p>該当する農薬がありません。</p>
+                <?php else: ?>
+                    <?php foreach ($filtered as $p): ?>
+                        <div class="result_card">
+                            <div class="card_title">
+                                <?php echo htmlspecialchars($p["name"] ?? "", ENT_QUOTES, "UTF-8"); ?>
+                            </div>
+                            <div class="card_specs">
+                                <div>希釈倍率： <?php echo htmlspecialchars((string)($p["magnification"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
+                                <div>使用回数： <?php echo htmlspecialchars((string)($p["times"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
+                                <div>収穫前日数： <?php echo htmlspecialchars((string)($p["interval"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
+                                <div>カケトコスコア： <?php echo htmlspecialchars((string)($p["score"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
 
         </section>
     </main>
