@@ -94,6 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body>
     <h1>カケトコmini 農薬マスタ管理</h1>
+    <a href="../index.php" class="index_link">メイン画面へ</a>
 
     <!-- 保存押した時表示されるメッセージ -->
     <?php if (isset($_GET["saved"])): ?>
