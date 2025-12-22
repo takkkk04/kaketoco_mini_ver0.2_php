@@ -195,16 +195,31 @@ $count = count($filtered);
                 <?php if ($count === 0): ?>
                     <p>該当する農薬がありません。</p>
                 <?php else: ?>
-                    <?php foreach ($filtered as $p): ?>
+                    <?php foreach ($filtered as $i =>$p): ?>
+                        <?php 
+                            $pid = $p["shopify_id"] ?? "";
+                            $boxId = "buy-" . $i;
+                            ?>
+                            
                         <div class="result_card">
                             <div class="card_title">
                                 <?php echo htmlspecialchars($p["name"] ?? "", ENT_QUOTES, "UTF-8"); ?>
                             </div>
-                            <div class="card_specs">
-                                <div>希釈倍率： <?php echo htmlspecialchars((string)($p["magnification"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
-                                <div>使用回数： <?php echo htmlspecialchars((string)($p["times"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
-                                <div>収穫前日数： <?php echo htmlspecialchars((string)($p["interval"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
-                                <div>カケトコスコア： <?php echo htmlspecialchars((string)($p["score"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
+                            <div class="card_body">
+                                <div class="card_shopify">
+                                    <div 
+                                        class="shopify_cell" 
+                                        id="<?php echo $boxId; ?>"
+                                        data-product-id="<?php echo htmlspecialchars((string)$pid, ENT_QUOTES, "UTF-8"); ?>">
+                                    </div>
+                                </div>
+
+                                <div class="card_specs">
+                                    <div>希釈倍率： <?php echo htmlspecialchars((string)($p["magnification"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
+                                    <div>使用回数： <?php echo htmlspecialchars((string)($p["times"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
+                                    <div>収穫前日数： <?php echo htmlspecialchars((string)($p["interval"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
+                                    <div>カケトコスコア： <?php echo htmlspecialchars((string)($p["score"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
+                                </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -217,6 +232,6 @@ $count = count($filtered);
     
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- <script type="module" src="app.js"></script> -->
+    <script type="module" src="shopify.js"></script>
 </body>
 </html>
