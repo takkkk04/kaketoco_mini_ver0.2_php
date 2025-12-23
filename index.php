@@ -115,17 +115,6 @@ $count = count($filtered);
         <a href="./admin/admin.php" class="admin_link">管理画面へ</a>
     </header>
 
-    <h2>登録データ一覧（テスト）</h2>
-    <ul>
-        <?php foreach ($list as $p): ?>
-        <li>
-            <?php echo htmlspecialchars($p["name"] ?? ""); ?>
-            (<?php echo htmlspecialchars($p["category"] ?? ""); ?>)
-            score: <?php echo htmlspecialchars((string)($p["score"] ?? "")); ?>
-        </li>
-        <?php endforeach; ?>
-    </ul>
-
     <main class="app_main">
         <section class="search_section">
             <h2>検索条件</h2>
