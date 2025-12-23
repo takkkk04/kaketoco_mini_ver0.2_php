@@ -19,10 +19,6 @@ body {
 
 .admin_link {
     float: right;
-    /* font-size: 12px;
-    color: #1f6feb;
-    text-decoration: none;
-    margin-top: -24px; */
 }
 
 .app_main {
@@ -30,6 +26,10 @@ body {
     margin: 0 auto;
     padding: 16px;
 }
+
+/* ========================================
+検索部
+======================================== */
 
 .search_section,
 .result_section {
@@ -56,11 +56,16 @@ body {
     margin-bottom: 6px;
 }
 
-select{
+select {
     width: 100%;
     padding: 8px;
     border: 1px solid #d7e6f7;
     border-radius: 8px;
+    font-size: 14px;
+}
+
+select option {
+    font-size: 14px;
 }
 
 .form_row_btn {
@@ -88,11 +93,27 @@ select{
     background: #ffffff;
 }
 
+/* ========================================
+結果表示部
+======================================== */
+
 .result_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+}
+
+.result_left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.result_right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 #result_count {
@@ -105,9 +126,14 @@ select{
     font-size: 12px;
 }
 
-#result_list{
-    display: flex;
-    flex-direction: column;
+.sort_label {
+    font-size: 12px;
+    color: #4a6075;
+}
+
+#result_list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 12px
 }
 
@@ -126,13 +152,15 @@ select{
     color: #102030;
 }
 
-.card_body {
+/* カード左側ー商品画像
+------------------------------- */
+.card_mid {
     display: flex;
     gap: 12px;
     align-items: flex-start;
 }
 
-.card_shopify {
+.card_left {
     width: 150px;
     flex: 0 0 150px;
     background: #f8fbff;
@@ -142,6 +170,16 @@ select{
     overflow: hidden;
 }
 
+.shopify_img img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    border: 1px solid #d7e6f7;
+}
+
+/* カード右側ースペック
+------------------------------- */
 .card_specs {
     flex: 1;
     min-width: 0;
@@ -166,31 +204,80 @@ select{
 
 .spec_val {
     font-weight: bold;
-    color: #102030;
+}
+
+/* カード下部ー価格、ボタン
+------------------------------- */
+.card_bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed #e5effb;
+}
+
+.shopify_price {
+    flex: 1;
+}
+
+.shopify_price .shopify-buy__product__actual-price {
+    margin: 0;
+    font-weight: bold;
+    font-size: 14px;
+    color: red;
+}
+
+/* Shopifyが入れてくるRegular Priceの表示を削除 */
+.visuallyhidden {
+    display: none !important;
+}
+
+/* 価格の後に（税込）を追加 */
+.shopify-buy__product__actual-price::after {
+    content: "（税込）";
+    font-size: 12px;
+    margin-left: 4px;
+    color: #4a6075;
+    font-weight: normal;
+}
+
+.shopify_btn {
+    width: 160px;
 }
 
 .shopify-buy__btn {
-    background: #ff7a00 !important;
-    border-color: #ff7a00 !important;
+    background: #ff9f43 !important;
+    border-color: #ff9f43 !important;
+    color: #ffffff !important;
     border-radius: 10px !important;
     font-weight: bold !important;
 }
 
-.shopify-buy__product-img-wrapper img {
-    border-radius: 10px;
-    border:1px solid #d7e6f7
+.shopify-buy__btn:hover {
+    background: #ff8f1f !important;
+    border-color: #ff7f24 !important;
 }
 
-.shopify-buy__product__price,
-.shopify-buy__product__actual-price {
-    font-weight: bold;
-    color: #102030;
+.shopify_btn .shopify-buy__btn {
+    width: 100%;
+    margin: 0;
 }
 
+/* ========================================
+レスポンシブ対応
+======================================== */
 @media (max-width: 899px) {
+    select,
+    select option {
+        font-size: 14px;
+    }
+
     .form_row_btn {
         flex-direction: column;
     }
+
     .shopify-buy__cart-wrapper {
         position: static;
         width: auto;
