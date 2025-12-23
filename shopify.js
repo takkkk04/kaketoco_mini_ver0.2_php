@@ -157,4 +157,9 @@ $(function () {
         console.error(e);
         alert("Shopifyの表示に失敗しました");
     });
+
+    //リセットボタン初期化処理
+    $("#reset_btn").on("click",function() {
+        window.location.href = window.location.pathname;
+    });
 });

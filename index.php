@@ -164,7 +164,7 @@ $count = count($filtered);
 
                 <div class="form_row_btn">
                     <button type="submit" id="search_btn">検索</button>
-                    <button type="reset" id="reset_btn">リセット</button>
+                    <button type="button" id="reset_btn">リセット</button>
                 </div>
 
             </form>
