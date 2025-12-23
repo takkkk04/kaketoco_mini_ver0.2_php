@@ -76,46 +76,80 @@ async function prepareShopifyUI() {
 }
 
 // =============================================
-// shopifyのデータを表示する関数
+// 商品画像、価格、ボタンをHTMLにマウントする（送る）関数
 // =============================================
-async function renderBuyButton (node, productID) {
-    // productIDがなければ無視
-    if (!productID) return;
-    //上で作ったUI準備関数を呼ぶ
+async function mountAllShopify() {
     const ui = await prepareShopifyUI();
 
-    //UIのコンポーネントを作る
-    ui.createComponent("product", {
-        //shopifyの商品IDごとに取ってこい
-        id: String(productID),
-        node,
-        moneyFormat: "%7B%7Bamount_no_decimals%7D%7D%E5%86%86",
-        options: {
-            product: {
-                iframe: false,
-                contents: {
-                    img: true,
-                    title: false,
-                    price: true,
-                },
-                text: {button: "購入"},
-            },
-            cart: {
-                text: {
-                    total: "小計",
-                    button: "購入手続きへ",
-                }
-            },
-        },
-    });
-}
+    document.querySelectorAll(".result_card").forEach((card) => {
+        const imgNode = card.querySelector(".shopify_img");
+        const productId = imgNode?.dataset.productId;
+        if (!productId) return;
 
-async function mountAllShopify() {
-    const nodes = document.querySelectorAll(".shopify_cell");
-    for (const node of nodes) {
-        const productId = node.dataset.productId;
-        await renderBuyButton(node, productId);
-    }
+        const priceNode = card.querySelector(".shopify_price");
+        const btnNode = card.querySelector(".shopify_btn");
+
+        //商品画像だけtrue
+        ui.createComponent("product", {
+            id: String(productId),
+            node: imgNode,
+            moneyFormat: "%7B%7Bamount_no_decimals%7D%7D%E5%86%86",
+            options: {
+                product: {
+                    iframe: false,
+                    contents: {
+                        img: true,
+                        title:false,
+                        price: false,
+                        button: false
+                    },
+                },
+            },
+        });
+
+        //価格だけtrue
+        ui.createComponent("product", {
+            id: String(productId),
+            node: priceNode,
+            moneyFormat: "%7B%7Bamount_no_decimals%7D%7D%E5%86%86",
+            options: {
+                product: {
+                    iframe: false,
+                    contents: {
+                        img: false,
+                        title:false,
+                        price: true,
+                        button: false
+                    },
+                },
+            },
+        });
+
+        //購入ボタンだけtrue
+        ui.createComponent("product", {
+            id: String(productId),
+            node: btnNode,
+            moneyFormat: "%7B%7Bamount_no_decimals%7D%7D%E5%86%86",
+            options: {
+                product: {
+                    iframe: false,
+                    contents: {
+                        img: false,
+                        title:false,
+                        price: false,
+                        button: true
+                    },
+                    text: {button: "購入"},
+                },
+                cart: {
+                    text: {
+                        total: "小計",
+                        button: "購入手続きへ",
+                    },
+                },
+            },
+        });
+    });
 }
 
 $(function () {

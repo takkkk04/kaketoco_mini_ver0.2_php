@@ -201,27 +201,43 @@ $count = count($filtered);
                             $boxId = "buy-" . $i;
                             ?>
                             
-                        <div class="result_card">
+                        <article class="result_card">
                             <div class="card_title">
                                 <?php echo htmlspecialchars($p["name"] ?? "", ENT_QUOTES, "UTF-8"); ?>
                             </div>
-                            <div class="card_body">
-                                <div class="card_shopify">
+                            <div class="card_mid">
+                                <div class="card_left">
                                     <div 
-                                        class="shopify_cell" 
-                                        id="<?php echo $boxId; ?>"
-                                        data-product-id="<?php echo htmlspecialchars((string)$pid, ENT_QUOTES, "UTF-8"); ?>">
+                                        class="shopify_img shopify_cell" 
+                                        data-product-id="<?php echo htmlspecialchars((string)($p["shopify_id"] ?? ""), ENT_QUOTES, "UTF-8"); ?>">
                                     </div>
                                 </div>
 
                                 <div class="card_specs">
-                                    <div>希釈倍率： <?php echo htmlspecialchars((string)($p["magnification"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
-                                    <div>使用回数： <?php echo htmlspecialchars((string)($p["times"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
-                                    <div>収穫前日数： <?php echo htmlspecialchars((string)($p["interval"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
-                                    <div>カケトコスコア： <?php echo htmlspecialchars((string)($p["score"] ?? ""), ENT_QUOTES, "UTF-8"); ?></div>
+                                    <div class="spec_row">
+                                        <span class="spec_label">希釈倍率</span>
+                                        <span class="spec_val"><?php echo htmlspecialchars((string)($p["magnification"] ?? ""), ENT_QUOTES, "UTF-8"); ?></span>
+                                    </div>
+                                    <div class="spec_row">
+                                        <span class="spec_label">使用回数</span>
+                                        <span class="spec_val"><?php echo htmlspecialchars((string)($p["times"] ?? ""), ENT_QUOTES, "UTF-8"); ?></span>
+                                    </div>
+                                    <div class="spec_row">
+                                        <span class="spec_label">収穫前日数</span>
+                                        <span class="spec_val"><?php echo htmlspecialchars((string)($p["interval"] ?? ""), ENT_QUOTES, "UTF-8"); ?></span>
+                                    </div>
+                                    <div class="spec_row">
+                                        <span class="spec_label">カケトコスコア</span>
+                                        <span class="spec_val"><?php echo htmlspecialchars((string)($p["score"] ?? ""), ENT_QUOTES, "UTF-8"); ?></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="card_bottom">
+                                <div class="shopify_price"></div>
+                                <div class="shopify_btn"></div>
+                            </div>
+                        </article>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
