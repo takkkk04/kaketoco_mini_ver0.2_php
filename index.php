@@ -205,15 +205,30 @@ $count = count($filtered);
                                 <div class="card_specs">
                                     <div class="spec_row">
                                         <span class="spec_label">希釈倍率</span>
-                                        <span class="spec_val"><?php echo htmlspecialchars((string)($p["magnification"] ?? ""), ENT_QUOTES, "UTF-8"); ?></span>
+                                        <span class="spec_val">
+                                            <?php
+                                                echo isset($p["magnification"])
+                                                    ? htmlspecialchars((string)$p["magnification"], ENT_QUOTES, "UTF-8") . "倍" : "";
+                                            ?>
+                                        </span>
                                     </div>
                                     <div class="spec_row">
                                         <span class="spec_label">使用回数</span>
-                                        <span class="spec_val"><?php echo htmlspecialchars((string)($p["times"] ?? ""), ENT_QUOTES, "UTF-8"); ?></span>
+                                        <span class="spec_val">
+                                            <?php
+                                                echo isset($p["times"])
+                                                    ? htmlspecialchars((string)$p["times"], ENT_QUOTES, "UTF-8") . "回" : ""; 
+                                            ?>
+                                        </span>
                                     </div>
                                     <div class="spec_row">
                                         <span class="spec_label">収穫前日数</span>
-                                        <span class="spec_val"><?php echo htmlspecialchars((string)($p["interval"] ?? ""), ENT_QUOTES, "UTF-8"); ?></span>
+                                        <span class="spec_val">
+                                            <?php
+                                                echo isset($p["interval"])
+                                                    ? htmlspecialchars((string)$p["interval"], ENT_QUOTES, "UTF-8") . "日前まで" : "";
+                                            ?>
+                                        </span>
                                     </div>
                                     <div class="spec_row">
                                         <span class="spec_label">カケトコスコア</span>
