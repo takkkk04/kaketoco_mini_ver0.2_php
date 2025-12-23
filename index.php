@@ -14,6 +14,7 @@ if (file_exists($filePath)) {
 $category = $_GET["category"] ?? "殺虫剤";
 $crop = trim($_GET["crop"] ?? "");
 $target = trim($_GET["target"] ?? "");
+$sort = $_GET["sort"] ?? "score_desc";
 
 // =============================================
 // 作物、病害虫プルダウン
@@ -83,18 +84,28 @@ $filtered = array_values(array_filter($list, function($p) use ($category, $crop,
 }));
 
 // =============================================
-// スコア順にソートする
+// 並び替え（スコア順、あいうえお順ソート）
 // =============================================
-
-//usort(A,B)はAをBの条件でソートする
-usort($filtered, function($a, $b){
-    //スコアを整数でふたつ取り出す、なければ0
-    $sa = (int)($a["score"] ?? 0);
-    $sb = (int)($b["score"] ?? 0);
-    //a <=> b 宇宙船演算子、aが小さいと-1、同じなら0、大きいと1を返す
+if ($sort === "name_asc") {
+    //あいうえお順ソート
+    //usort(A,B)はAをBの条件でソートする
+    usort($filtered, function($a, $b){
+        $na = (string)($a["name"] ?? "");
+        $nb = (string)($b["name"] ?? "");
     //b <=> a にすると降順ソートになる
-    return $sb <=> $sa;
-});
+        return strcmp($na, $nb);
+    });
+} else {
+    //スコア順ソート（こっちがデフォルト）
+    usort($filtered, function($a, $b){
+        //スコアを整数(int)でふたつ取り出す、なければ0
+        $sa = (int)($a["score"] ?? 0);
+        $sb = (int)($b["score"] ?? 0);
+        //a <=> b 宇宙船演算子、aが小さいと-1、同じなら0、大きいと1を返す
+        //b <=> a にすると降順ソートになる
+        return $sb <=> $sa;
+    });
+}
 
 $count = count($filtered);
 
@@ -173,9 +184,17 @@ $count = count($filtered);
         <section class="result_section">
             
             <div class="result_header">
-                <h2>検索結果</h2>
-                <div class="result_meta">
+                <div class="result_left">
+                    <h2>検索結果</h2>
                     <span id="result_count"><?php echo (int)$count ?>件</span>
+                </div>
+
+                <div class="result_right">
+                    <label for="sort" class="sort_label"></label>
+                    <select name="sort" id="sort">
+                        <option value="score_desc" <?php echo ($sort ==="score_desc") ? "selected" : ""; ?>>カケトコスコア順</option>
+                        <option value="name_asc" <?php echo ($sort === "name_asc") ? "selected" : "";?>>名前順</option>
+                    </select>
                 </div>
             </div>
 

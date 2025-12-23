@@ -104,6 +104,18 @@ select option {
     margin-bottom: 10px;
 }
 
+.result_left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.result_right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 #result_count {
     background: #e6f2ff;
     color: #1f6feb;
@@ -112,6 +124,11 @@ select option {
     border-radius: 999px;
     font-weight: bold;
     font-size: 12px;
+}
+
+.sort_label {
+    font-size: 12px;
+    color: #4a6075;
 }
 
 #result_list {
